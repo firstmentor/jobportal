@@ -55,6 +55,8 @@ route.get('/deleteJob/:id', checkAuth, JobController.deleteJob)
 route.post("/job/apply/:id", checkAuth, JobController.applyJob);
 route.get("/myapplications", checkAuth, JobController.myApplications);
 route.get("/admin/applications", checkAuth, JobController.viewAllApplications);
+route.post("/admin/application/:id/status", checkAuth, JobController.updateApplicationStatus);
+
 
 
 

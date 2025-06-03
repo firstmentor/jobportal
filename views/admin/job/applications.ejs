@@ -25,6 +25,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
+          <% if(success.length >0){ %>
+            <div class="alert alert-success"><%= success %></div>
+    
+            <% } %>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -34,6 +38,8 @@
                 <th>Resume</th>
                 <th>Cover Letter</th>
                 <th>Applied At</th>
+                <th>Status</th>
+                <th>Update Status</th>
               </tr>
             </thead>
             <tbody>
@@ -45,6 +51,17 @@
                   <td><a href="<%= app.resume.url %>" target="_blank">View Resume</a></td>
                   <td><%= app.coverLetter || 'N/A' %></td>
                   <td><%= app.appliedAt.toLocaleDateString() %></td>
+                  <td><%= app.status %></td>
+        <td>
+          <form action="/admin/application/<%= app._id %>/status" method="POST">
+            <select name="status" onchange="this.form.submit()">
+              <option value="Pending" <%= app.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+              <option value="Reviewed" <%= app.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
+              <option value="Interview" <%= app.status === 'Interview' ? 'selected' : '' %>>Interview</option>
+              <option value="Rejected" <%= app.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+            </select>
+          </form>
+        </td>
                 </tr>
               <% }) %>
             </tbody>

@@ -38,6 +38,7 @@
                   <th>Company</th>
                   <th>Applied Date</th>
                   <th>Cover Letter</th>
+                  <th>Status</th>
                   <th>Resume</th>
                 </tr>
               </thead>
@@ -48,6 +49,7 @@
                     <td><%= app.jobId ? app.jobId.companyName : "N/A" %></td>
                     <td><%= new Date(app.appliedAt).toLocaleDateString() %></td>
                     <td><%= app.coverLetter || "N/A" %></td>
+                    <td><%= app.status %></td>
                     <td>
                       <% if(app.resume && app.resume.url) { %>
                         <!-- Google Docs Preview -->

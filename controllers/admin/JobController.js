@@ -270,12 +270,33 @@ class JobController {
         .populate('jobId', 'title companyName')  // sirf job ka title aur companyName lenge
         .populate('userId', 'name email');       // user ka naam aur email bhi lenge
   
-      res.render('admin/job/applications', { applications });
+      res.render('admin/job/applications', { applications,success:req.flash('success') });
     } catch (err) {
       console.error(err);
       res.status(500).send("Server error");
     }
   };
+
+
+  // Example: PUT /admin/application/:id/status
+static updateApplicationStatus = async (req, res) => {
+  try {
+    const appId = req.params.id;
+    const newStatus = req.body.status; // Expected: Pending, Reviewed, Interview, Rejected
+
+    if (!['Pending', 'Reviewed', 'Interview', 'Rejected'].includes(newStatus)) {
+      return res.status(400).send('Invalid status');
+    }
+
+    await JobApplicationModel.findByIdAndUpdate(appId, { status: newStatus });
+    req.flash('success', 'Application status updated successfully.');
+    res.redirect('/admin/applications');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+}
+
   
 
   
