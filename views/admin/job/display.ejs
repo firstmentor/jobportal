@@ -1,0 +1,217 @@
+<%- include('../navbar.ejs') %> <%- include('../sidebar.ejs') %>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Job</h1>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">job Page</li>
+          </ol>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <button
+            type="button"
+            class="btn btn-info"
+            data-toggle="modal"
+            data-target="#modal-default"
+          >
+            Add Job
+          </button>
+          <% if(success.length >0){ %>
+          <div class="alert alert-success"><%= success %></div>
+          <% } %>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <td>S.No</td>
+                <th>Job title</th>
+                <th>companyName</th>
+                <th>Location</th>
+                <th>JobType</th>
+                <th>Image</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% j.forEach((item,index)=>{ %>
+              <tr>
+                <td><%= index+1 %></td>
+                <td><%= item.title %></td>
+                <td><%= item.companyName %></td>
+                <td><%= item.location %></td>
+                <td><%= item.jobType %></td>
+                <td><img src="<%= item.image.url %>" alt="" width="100"></td>
+                <td>
+                  <a href="/viewJob/<%= item._id %>" class="btn btn-info"
+                    >View</a
+                  >
+                  <a href="/editJob/<%=item._id %>" class="btn btn-success"
+                    >Edit</a
+                  >
+                  <a href="/deleteJob/<%= item._id %>" class="btn btn-danger"
+                    >Delete</a
+                  >
+                </td>
+              </tr>
+
+              <% }) %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Id</td>
+                <th>Job title</th>
+                <th>companyName</th>
+                <th>Location</th>
+                <th>JobType</th>
+                <th>Image</th>
+                <th>Action</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add job</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/insertJob" method="POST" enctype="multipart/form-data">
+            
+            <label>Category</label><br />
+            <select name="category" required class="form-control">
+              <% c.forEach((item) => { %>
+              <option value="<%= item.title %>"><%= item.title %></option>
+              <% }) %>
+            </select>
+            <br /><br />
+            <label>Title</label><br />
+            <input
+              type="text"
+              class="form-control"
+              name="title"
+              required
+            /><br /><br />
+
+           
+
+            <label>Company Name</label><br />
+            <input
+              type="text"
+              class="form-control"
+              name="companyName"
+              required
+            /><br /><br />
+            <!-- ✅ THIS FIELD -->
+
+            <label>Job Description</label><br />
+            <textarea
+              name="description"
+              class="form-control"
+              rows="5"
+              required
+            ></textarea
+            ><br /><br />
+
+            <label>Location</label><br />
+            <input
+              type="text"
+              class="form-control"
+              name="location"
+              required
+            /><br /><br />
+
+            <label for="">Job Type</label><br />
+            <select name="jobType" required class="form-control">
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="internship">Internship</option>
+              <option value="contract">Contract</option></select>
+              <br /><br />
+
+            <label>Salary Range</label><br />
+            <input
+              type="text"
+              name="salaryRange"
+              placeholder="e.g. 4-6 LPA"
+              class="form-control"
+              required
+            /><br /><br />
+
+            <label>Skills Required (comma separated)</label><br />
+            <input
+              type="text"
+              name="skillsRequired"
+              placeholder="e.g. Python, SQL, Django"
+              class="form-control"
+              required
+            /><br /><br />
+
+            <label>Last Date to Apply</label><br />
+            <input
+              type="date"
+              name="lastDateToApply"
+              required
+              class="form-control"
+            /><br /><br />
+
+            <label>Image</label><br />
+            <input
+              type="file"
+              name="image"
+              required
+              class="form-control"
+            /><br /><br />
+
+
+            <button class="btn btn-info" type="submit">Post Job</button>
+          </form>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+</div>
+<!-- /.modal -->
+
+<%- include('../footer.ejs') %>

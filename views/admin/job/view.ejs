@@ -1,0 +1,96 @@
+<%- include('../navbar.ejs')   %>
+<%- include('../sidebar.ejs')   %>
+  
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Job</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Job View</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-header">
+            
+          
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+              <thead>
+              <tr>
+                <td>Id</td>
+                <th>Job title</th>
+                <th>companyName</th>
+                <th>Location</th>
+                <th>JobType</th>
+                <th>Image</th>
+                
+               
+               
+              </tr>
+              </thead>
+              <tbody>
+            
+                <tr>
+                  <td><%= job._id %></td>
+                  <td><%= job.title %></td>
+                  <td><%= job.companyName %></td>
+                  <td><%= job.location %></td>
+                  <td><%= job.jobType %></td>
+                  <td><img src="<%= job.image.url %>" alt="" width="100"></td>
+                  
+                </tr>
+
+              
+
+              </tbody>
+              <tfoot>
+              <tr>
+                <td>Id</td>
+                <th>Job title</th>
+                <th>companyName</th>
+                <th>Location</th>
+                <th>JobType</th>
+                <th>Image</th>
+               
+                
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        
+      
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+
+<%- include('../footer.ejs')   %>
+
+  
+
+ 
+

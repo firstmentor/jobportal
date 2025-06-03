@@ -1,0 +1,76 @@
+<%- include('../navbar.ejs') %> 
+<%- include('../sidebar.ejs') %>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Job Applications</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">My Applications</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <% if(applications.length === 0) { %>
+        <div class="alert alert-info">No Job Applications Found</div>
+      <% } else { %>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Applied Jobs</h3>
+          </div>
+          <div class="card-body table-responsive p-0" style="max-height: 400px;">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Applied Date</th>
+                  <th>Cover Letter</th>
+                  <th>Resume</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% applications.forEach(app => { %>
+                  <tr>
+                    <td><%= app.jobId ? app.jobId.title : "Job Deleted" %></td>
+                    <td><%= app.jobId ? app.jobId.companyName : "N/A" %></td>
+                    <td><%= new Date(app.appliedAt).toLocaleDateString() %></td>
+                    <td><%= app.coverLetter || "N/A" %></td>
+                    <td>
+                      <% if(app.resume && app.resume.url) { %>
+                        <!-- Google Docs Preview -->
+                        <a href="https://docs.google.com/gview?url=<%= app.resume.url %>&embedded=true" 
+                           target="_blank" 
+                           class="btn btn-sm btn-info mb-1">Preview</a><br>
+                        <!-- Direct Download -->
+                        <a href="<%= app.resume.url %>" 
+                           download 
+                           class="btn btn-sm btn-success mt-1">Download</a>
+                      <% } else { %>
+                        N/A
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+</div>
+
+<%- include('../footer.ejs') %>
