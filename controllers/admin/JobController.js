@@ -94,7 +94,7 @@ class JobController {
              <p>${description}</p>
              <p><strong>Location:</strong> ${location}</p>
              <p><strong>Salary:</strong> ${salaryRange}</p>
-             <a href="http://localhost:5000/joblist">View Job</a>
+             <a href="https://jobportal-fg3t.onrender.com/joblist">View Job</a>
            `,
         });
       }
