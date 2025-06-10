@@ -47,50 +47,44 @@
             <thead>
               <tr>
                 <td>S.No</td>
-                <th>Job title</th>
-                <th>companyName</th>
+                <th>Job Title</th>
+                <th>Company Name</th>
                 <th>Location</th>
-                <th>JobType</th>
+                <th>Job Type</th>
                 <th>Image</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <% j.forEach((item,index)=>{ %>
-              <tr>
-                <td><%= index+1 %></td>
-                <td><%= item.title %></td>
-                <td><%= item.companyName %></td>
-                <td><%= item.location %></td>
-                <td><%= item.jobType %></td>
-                <td><img src="<%= item.image.url %>" alt="" width="100"></td>
-                <td>
-                  <a href="/viewJob/<%= item._id %>" class="btn btn-info"
-                    >View</a
-                  >
-                  <a href="/editJob/<%=item._id %>" class="btn btn-success"
-                    >Edit</a
-                  >
-                  <a href="/deleteJob/<%= item._id %>" class="btn btn-danger"
-                    >Delete</a
-                  >
-                </td>
-              </tr>
-
+              <% j.forEach((item, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= item.title %></td>
+                  <td><%= item.company %></td> <!-- Fix here -->
+                  <td><%= item.location %></td>
+                  <td><%= item.jobType %></td>
+                  <td><img src="<%= item.image.url %>" alt="Job Image" width="100"></td>
+                  <td>
+                    <a href="/viewJob/<%= item._id %>" class="btn btn-info">View</a>
+                    <a href="/editJob/<%= item._id %>" class="btn btn-success">Edit</a>
+                    <a href="/deleteJob/<%= item._id %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this job?')">Delete</a>
+                  </td>
+                </tr>
               <% }) %>
             </tbody>
             <tfoot>
               <tr>
-                <td>Id</td>
-                <th>Job title</th>
-                <th>companyName</th>
+                <td>S.No</td>
+                <th>Job Title</th>
+                <th>Company Name</th>
                 <th>Location</th>
-                <th>JobType</th>
+                <th>Job Type</th>
                 <th>Image</th>
                 <th>Action</th>
               </tr>
             </tfoot>
           </table>
+          
         </div>
         <!-- /.card-body -->
       </div>
@@ -134,14 +128,14 @@
 
            
 
-            <label>Company Name</label><br />
+            <!-- <label>Company Name</label><br />
             <input
               type="text"
               class="form-control"
               name="companyName"
               required
             /><br /><br />
-            <!-- ✅ THIS FIELD -->
+            ✅ THIS FIELD -->
 
             <label>Job Description</label><br />
             <textarea

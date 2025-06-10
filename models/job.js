@@ -12,7 +12,7 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  companyName: {
+  company: {
     type: String,
     required: true
   },
@@ -41,6 +41,10 @@ const jobSchema = new mongoose.Schema({
   image:{
     public_id:{type:String},
     url:{type:String}
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
   },
   createdAt: {
     type: Date,

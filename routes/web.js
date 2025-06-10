@@ -32,6 +32,18 @@ route.get('/dashboard',checkAuth, AdminController.dashboard)
 route.post('/adminInsert', AdminController.adminInsert)
 route.post('/verifyLogin', AdminController.verifyLogin)
 route.get('/logout', checkAuth, AdminController.logout)
+route.get('/admin/recruiters', checkAuth, AdminController.adminrecruiters)
+route.get("/admin/approve/:id",checkAuth, AdminController.approveRecruiter);
+route.get("/admin/reject/:id", checkAuth,AdminController.rejectRecruiter);
+route.get('/admin/export-users',checkAuth, AdminController.exportUsers);
+route.get('/admin/users',checkAuth, AdminController.manageUsers);
+route.get('/admin/delete-user/:id', AdminController.deleteUser);
+
+
+
+
+
+
 
 //categoryController
 route.get('/category/display',checkAuth, CategoryController.display)
@@ -44,7 +56,7 @@ route.post('/UpdateCategory/:id', checkAuth, CategoryController.UpdateCategory)
 //https://localhost:3000/category/display
 
 //Jobcontroller
-route.get('/job/display',checkAuth, JobController.display)
+route.get('/recruiter/jobs',checkAuth, JobController.display)
 route.post('/insertJob',checkAuth, JobController.insertJob)
 route.get('/viewJob/:id', checkAuth, JobController.viewJob)
 route.get('/editJob/:id', checkAuth, JobController.editJob)
@@ -54,7 +66,7 @@ route.get('/deleteJob/:id', checkAuth, JobController.deleteJob)
 //job apply 
 route.post("/job/apply/:id", checkAuth, JobController.applyJob);
 route.get("/myapplications", checkAuth, JobController.myApplications);
-route.get("/admin/applications", checkAuth, JobController.viewAllApplications);
+route.get("/recruiter/applicants", checkAuth, JobController.viewAllApplications);
 route.post("/admin/application/:id/status", checkAuth, JobController.updateApplicationStatus);
 
 

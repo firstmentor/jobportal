@@ -231,12 +231,10 @@
           </li>
         </ul>
         <div class="tab-content">
-          
           <div id="tab-1" class="tab-pane fade show p-0 active">
-            <% j.forEach((item) => { %>
-          
             <div class="job-item p-4 mb-4">
               <div class="row g-4">
+                <% j.forEach((item) => { %>
                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
                   <img
                     class="flex-shrink-0 img-fluid border rounded"
@@ -247,10 +245,12 @@
                   <div class="text-start ps-4">
                     <h5 class="mb-3"><%= item.title %></h5>
                     <span class="text-truncate me-3"
-                      ><i class="fa fa-map-marker-alt text-primary me-2"></i><%= item.location %></span
+                      ><i class="fa fa-map-marker-alt text-primary me-2"></i><%=
+                      item.location %></span
                     >
                     <span class="text-truncate me-3"
-                      ><i class="far fa-clock text-primary me-2"></i><%= item.jobType %></span
+                      ><i class="far fa-clock text-primary me-2"></i><%=
+                      item.jobType %></span
                     >
                     <span class="text-truncate me-0"
                       ><i class="far fa-money-bill-alt text-primary me-2"></i
@@ -265,28 +265,32 @@
                     <a class="btn btn-light btn-square me-3" href=""
                       ><i class="far fa-heart text-primary"></i
                     ></a>
-                    <a href="/jobdetails/<%= item._id %>" class="btn btn-primary" href="">Job Details</a>
+                    <a
+                      href="/jobdetails/<%= item._id %>"
+                      class="btn btn-primary"
+                      href=""
+                      >Job Details</a
+                    >
                   </div>
                   <small class="text-truncate">
                     <i class="far fa-calendar-alt text-primary me-2"></i>
-                    Date Line: <%= new Date(item.createdAt).toLocaleDateString("en-IN") %>
+                    Date Line: <%= new
+                    Date(item.createdAt).toLocaleDateString("en-IN") %>
                   </small>
+                  <% }) %>
+                </div>
               </div>
+
+              <a class="btn btn-primary py-3 px-5" href="/joblist">Browse More Jobs</a>
             </div>
-          
-          <% }) %>
-            
-            
-            <a class="btn btn-primary py-3 px-5" href="">Browse More Jobs</a>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Jobs End -->
+    <!-- Jobs End -->
 
-  <!-- Testimonial Start -->
-  <!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <!-- Testimonial Start -->
+    <!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
     <div class="container">
       <h1 class="text-center mb-5">Our Clients Say!!!</h1>
       <div class="owl-carousel testimonial-carousel">
@@ -365,7 +369,8 @@
       </div>
     </div>
   </div> -->
-  <!-- Testimonial End -->
+    <!-- Testimonial End -->
 
-  <%- include('footer.ejs') %>
+    <%- include('footer.ejs') %>
+  </div>
 </div>

@@ -26,44 +26,51 @@
       >
         <% if (role === 'admin') { %>
         <!-- ADMIN SIDEBAR ITEMS -->
+        <!-- ADMIN SIDEBAR ITEMS -->
         <li class="nav-item has-treeview">
-          <a href="#" class="nav-link active">
-            <i class="nav-icon fas fa-list-alt"></i>
-            <p>Category<i class="right fas fa-angle-left"></i></p>
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-th-large"></i>
+            <p>
+              Category
+              <i class="right fas fa-angle-left"></i>
+            </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="/category/display" class="nav-link active">
+              <a href="/category/display" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Display</p>
+                <p>View Categories</p>
               </a>
             </li>
           </ul>
         </li>
 
-        <li class="nav-item has-treeview">
-          <a href="#" class="nav-link active">
-            <i class="nav-icon fas fa-list-alt"></i>
-            <p>Job<i class="right fas fa-angle-left"></i></p>
+        <li class="nav-item">
+          <a href="/admin/recruiters" class="nav-link">
+            <i class="nav-icon fas fa-user-check"></i>
+            <p>Approve Recruiters</p>
           </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="/job/display" class="nav-link active">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Display</p>
-              </a>
-            </li>
-          </ul>
         </li>
-        <!-- New Nav Item for Job Applications -->
+
         <li class="nav-item">
           <a href="/admin/applications" class="nav-link">
             <i class="nav-icon fas fa-file-alt"></i>
             <p>Job Applications</p>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a href="/admin/users" class="nav-link">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>Manage Users</p>
+          </a>
+        </li>
+
+       
+
         <% } else if (role === 'jobseeker') { %>
-        <!-- USER SIDEBAR ITEMS -->
+        <!-- JOBSEEKER SIDEBAR ITEMS -->
+        <!-- JOBSEEKER SIDEBAR ITEMS -->
         <li class="nav-item">
           <a href="/user/jobs" class="nav-link">
             <i class="nav-icon fas fa-briefcase"></i>
@@ -76,15 +83,34 @@
             <p>My Applications</p>
           </a>
         </li>
-        <% } %>
+
+        <% } else if (role === 'recruiter') { %>
+        <!-- RECRUITER SIDEBAR ITEMS -->
+        <!-- RECRUITER SIDEBAR ITEMS -->
         <li class="nav-item">
-          <a href="/chnagePssword" class="nav-link">
-            <i class="nav-icon fas fa-sign-out-alt"></i>
-            <p>Chnage Password</p>
+          <a href="/recruiter/jobs" class="nav-link">
+            <i class="nav-icon fas fa-briefcase"></i>
+            <p>Manage Jobs</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/recruiter/applicants" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>Applicants</p>
           </a>
         </li>
 
-        <!-- Common Logout Option -->
+        <% } %>
+
+        <!-- Common Links for All Roles -->
+        <!-- Common Links for All Roles -->
+        <li class="nav-item">
+          <a href="/changePassword" class="nav-link">
+            <i class="nav-icon fas fa-key"></i>
+            <p>Change Password</p>
+          </a>
+        </li>
+
         <li class="nav-item">
           <a href="/logout" class="nav-link">
             <i class="nav-icon fas fa-sign-out-alt"></i>

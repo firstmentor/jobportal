@@ -37,51 +37,92 @@
 
         <% } %>
 
-      <form action="/adminInsert" method="post">
-        <div class="input-group mb-3">
-          <input type="text" name="name" class="form-control" placeholder="Full name" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
+        <form action="/adminInsert" method="post">
+          <div class="input-group mb-3">
+            <input type="text" name="name" class="form-control" placeholder="Full name" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="input-group mb-3">
-          <input type="number" name="phone" class="form-control" placeholder="Phone" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-phone"></span>           
-             </div>
-          </div>
-        </div>
-
         
+          <div class="input-group mb-3">
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
         
+          <div class="input-group mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+        
+          <div class="input-group mb-3">
+            <input type="number" name="phone" class="form-control" placeholder="Phone" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-phone"></span>           
+              </div>
+            </div>
+          </div>
+        
+          <!-- Role Select -->
+          <div class="input-group mb-3">
+            <select name="role" class="form-control" required id="roleSelect">
+              <option value="">Select Role</option>
+              <option value="jobseeker">Job Seeker</option>
+              <option value="recruiter">Recruiter</option>
+            </select>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>          
+              </div>
+            </div>
+          </div>
+        
+          <!-- Company Name Field (Hidden by default) -->
+          <div class="input-group mb-3" id="companyField" style="display: none;">
+            <input type="text" name="companyName" class="form-control" placeholder="Company Name">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-building"></span>
+              </div>
+            </div>
+          </div>
         
           <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block">Register</button>
           </div>
-          <!-- /.col -->
-        </div>
-      </form>
-
+        </form>
+        
+        <!-- JS to toggle Company Name field -->
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const roleSelect = document.getElementById('roleSelect');
+            const companyField = document.getElementById('companyField');
+            const companyInput = companyField.querySelector('input');
+        
+            roleSelect.addEventListener('change', function () {
+              if (this.value === 'recruiter') {
+                companyField.style.display = 'flex';
+                companyInput.setAttribute('required', 'required');
+              } else {
+                companyField.style.display = 'none';
+                companyInput.removeAttribute('required');
+                companyInput.value = '';
+              }
+            });
+          });
+        </script>
+        
       
 
       <a href="/login" class="text-center">I already have a membership</a>

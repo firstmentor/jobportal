@@ -15,10 +15,9 @@ cloudinary.config({
 class JobController {
   static display = async (req, res) => {
     try {
-      const job = await JobModel.find().sort({ createdAt: -1 }); // data fetch mongodb
+      const job = await JobModel.find({ createdBy: req.user._id }).sort({ createdAt: -1 }); 
       const category = await CategoryModel.find().sort({ createdAt: -1 });
-
-      //   console.log(job);
+  
       res.render("admin/job/display", {
         name: req.user.name,
         j: job,
@@ -29,34 +28,32 @@ class JobController {
       console.log(error);
     }
   };
+  
   static insertJob = async (req, res) => {
     try {
-      // console.log(req.files.image);
-
-      // console.log(imageUpload)
       const {
         category,
         title,
         description,
-        companyName,
         location,
         jobtype,
         salaryRange,
         skillsRequired,
         lastDateToApply,
       } = req.body;
-      //image upload
+  
       const file = req.files.image;
       const imageUpload = await cloudinary.uploader.upload(file.tempFilePath, {
         folder: "image",
       });
+  
       const job = await JobModel.create({
         category,
         title,
         description,
-        companyName,
+        company: req.user.name,
         location,
-        jobtype,
+        jobType: jobtype, // spelling fix
         salaryRange,
         skillsRequired,
         lastDateToApply,
@@ -64,14 +61,16 @@ class JobController {
           public_id: imageUpload.public_id,
           url: imageUpload.secure_url,
         },
+        createdBy: req.user._id // ✅ recruiter _id save
       });
-
-      req.flash("success", "Job insert Successfully");
-      res.redirect("/job/display");
+  
+      req.flash("success", "Job inserted successfully");
+      res.redirect("/recruiter/jobs");
     } catch (error) {
       console.log(error);
     }
   };
+  
   static viewJob = async (req, res) => {
     try {
       // console.log(req.params.id)
@@ -154,7 +153,7 @@ class JobController {
       });
 
       req.flash("success", "Job updated successfully");
-      res.redirect("/job/display");
+      res.redirect("/recruiter/jobs");
     } catch (error) {
       console.error("Error updating job:", error);
       res.status(500).send("Internal Server Error");
@@ -177,7 +176,7 @@ class JobController {
       await JobModel.findByIdAndDelete(id);
 
       req.flash("success", "Job deleted successfully");
-      res.redirect("/job/display");
+      res.redirect("/recruiter/jobs");
     } catch (error) {
       console.error("Error deleting job:", error);
     }

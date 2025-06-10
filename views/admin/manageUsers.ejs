@@ -1,0 +1,84 @@
+<%- include('./navbar') %>
+<%- include('./sidebar') %>
+
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <h1>Manage Users</h1>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="container-fluid">
+
+      <% if(success.length > 0) { %>
+        <div class="alert alert-success"><%= success %></div>
+      <% } %>
+
+      <% if(error.length > 0) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">All Registered Users</h5>
+          <a href="/admin/export-users" class="btn btn-sm btn-success">
+            <i class="fas fa-download"></i> Export to CSV
+          </a>
+        </div>
+
+        <div class="card-body">
+          <table class="table table-bordered table-striped" id="userTable">
+            <thead class="thead-dark">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach((u, i) => { %>
+                <tr>
+                  <td><%= i + 1 %></td>
+                  <td><%= u.name %></td>
+                  <td><%= u.email %></td>
+                  <td><%= u.phone %></td>
+                  <td><%= u.role %></td>
+                  <td>
+                    <% if (u.status === 'approved') { %>
+                      <span class="badge badge-success">Approved</span>
+                    <% } else { %>
+                      <span class="badge badge-warning">Pending</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/admin/delete-user/<%= u._id %>" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete <%= u.name %>?');">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%- include('./footer') %>
+
+<script>
+  // Activate DataTable
+  document.addEventListener('DOMContentLoaded', function () {
+    $('#userTable').DataTable();
+  });
+</script>
+
