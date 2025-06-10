@@ -51,7 +51,7 @@ class JobController {
         category,
         title,
         description,
-        company: req.user.name,
+        company: req.user.companyName,
         location,
         jobType: jobtype, // spelling fix
         salaryRange,
