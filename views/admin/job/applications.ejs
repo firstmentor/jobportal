@@ -46,23 +46,34 @@
               <% applications.forEach(function(app, index) { %>
                 <tr>
                   <td><%= index + 1 %></td>
-                  <td><%= app.userId.name %></td>
-                  <td><%= app.jobId.title %></td>
-                  <td><a href="<%= app.resume.url %>" target="_blank">View Resume</a></td>
+                  <td><%= app.userId?.name || 'N/A' %></td>
+                  <td><%= app.jobId ? app.jobId.title : 'Job Deleted' %></td>
+                  <td>
+                    <% if(app.resume?.url) { %>
+                      <a href="<%= app.resume.url %>" target="_blank">View Resume</a>
+                    <% } else { %>
+                      N/A
+                    <% } %>
+                  </td>
                   <td><%= app.coverLetter || 'N/A' %></td>
-                  <td><%= app.appliedAt.toLocaleDateString() %></td>
+                  <td><%= app.appliedAt?.toLocaleDateString() || 'N/A' %></td>
                   <td><%= app.status %></td>
-        <td>
-          <form action="/admin/application/<%= app._id %>/status" method="POST">
-            <select name="status" onchange="this.form.submit()">
-              <option value="Pending" <%= app.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-              <option value="Reviewed" <%= app.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
-              <option value="Interview" <%= app.status === 'Interview' ? 'selected' : '' %>>Interview</option>
-              <option value="Rejected" <%= app.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
-            </select>
-          </form>
-        </td>
+                  <td>
+                    <% if(app.jobId) { %>
+                      <form action="/admin/application/<%= app._id %>/status" method="POST">
+                        <select name="status" onchange="this.form.submit()">
+                          <option value="Pending" <%= app.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                          <option value="Reviewed" <%= app.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
+                          <option value="Interview" <%= app.status === 'Interview' ? 'selected' : '' %>>Interview</option>
+                          <option value="Rejected" <%= app.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                        </select>
+                      </form>
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
                 </tr>
+                
               <% }) %>
             </tbody>
           </table>

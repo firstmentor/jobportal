@@ -2,8 +2,12 @@ const JobModel = require("../../models/job");
 const cloudinary = require("cloudinary");
 const CategoryModel = require("../../models/category");
 const moment = require("moment");
-const JobApplicationModel =require('../../models/ApplicationModel')
+const JobApplicationModel = require("../../models/ApplicationModel");
 const fs = require("fs");
+const nodemailer = require("nodemailer");
+const UserModel = require("../../models/user"); // Assuming you have a user model to fetch jobseeker
+require("dotenv").config();
+const sendEmail = require("../../utils/sendMail");
 
 
 cloudinary.config({
@@ -15,10 +19,12 @@ cloudinary.config({
 class JobController {
   static display = async (req, res) => {
     try {
-      const job = await JobModel.find({ createdBy: req.user.id }).populate('createdBy').sort({ createdAt: -1 }); 
+      const job = await JobModel.find({ createdBy: req.user.id })
+        .populate("createdBy")
+        .sort({ createdAt: -1 });
       const category = await CategoryModel.find().sort({ createdAt: -1 });
       // console.log(job)
-  
+
       res.render("admin/job/display", {
         name: req.user.name,
         j: job,
@@ -29,7 +35,7 @@ class JobController {
       console.log(error);
     }
   };
-  
+
   static insertJob = async (req, res) => {
     try {
       const {
@@ -42,12 +48,12 @@ class JobController {
         skillsRequired,
         lastDateToApply,
       } = req.body;
-  
+
       const file = req.files.image;
       const imageUpload = await cloudinary.uploader.upload(file.tempFilePath, {
         folder: "image",
       });
-  
+
       const job = await JobModel.create({
         category,
         title,
@@ -62,22 +68,50 @@ class JobController {
           public_id: imageUpload.public_id,
           url: imageUpload.secure_url,
         },
-        createdBy: req.user.id // ✅ recruiter _id save
+        createdBy: req.user.id, // ✅ recruiter _id save
       });
-  
+
+      // ✅ Fetch all jobseekers (assuming role === "jobseeker")
+      const jobseekers = await UserModel.find({ role: "jobseeker" });
+
+      // ✅ Send emails
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_ID,
+          pass: process.env.MAIL_PASS, //Use app password, not your main Gmail password
+        },
+      });
+
+      // ✅ Loop and send emails
+      for (let user of jobseekers) {
+        await transporter.sendMail({
+          from: '"Worklnn" <your_email@gmail.com>',
+          to: user.email,
+          subject: `New Job Posted: ${title}`,
+          html: `
+             <h3>${title}</h3>
+             <p>${description}</p>
+             <p><strong>Location:</strong> ${location}</p>
+             <p><strong>Salary:</strong> ${salaryRange}</p>
+             <a href="http://localhost:5000/joblist">View Job</a>
+           `,
+        });
+      }
+
       req.flash("success", "Job inserted successfully");
       res.redirect("/recruiter/jobs");
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   static viewJob = async (req, res) => {
     try {
       // console.log(req.params.id)
       const id = req.params.id;
-      const job = await JobModel.findById(id).populate('createdBy'); //data fetch mognobd
-    
+      const job = await JobModel.findById(id).populate("createdBy"); //data fetch mognobd
+
       //   console.log(category);
       res.render("admin/job/view", {
         name: req.user.name,
@@ -91,7 +125,7 @@ class JobController {
     try {
       // console.log(req.params.id);
       const id = req.params.id;
-      const job = await JobModel.findById(id).populate('createdBy');;
+      const job = await JobModel.findById(id).populate("createdBy");
       // console.log(job);
       res.render("admin/job/edit", {
         name: req.user.name,
@@ -109,7 +143,7 @@ class JobController {
       const {
         title,
         description,
-        
+
         location,
         jobType,
         salaryRange,
@@ -144,7 +178,7 @@ class JobController {
       await JobModel.findByIdAndUpdate(id, {
         title,
         description,
-      
+
         location,
         jobType,
         salaryRange,
@@ -184,129 +218,180 @@ class JobController {
     }
   };
 
-
   //apply job
-   //apply job function
+  //apply job function
 
-
-   static applyJob = async (req, res) => {
-     try {
-       const jobId = req.params.id;
-   
-       const alreadyApplied = await JobApplicationModel.findOne({
-         userId: req.user.id,
-         jobId: jobId
-       });
-   
-       if (alreadyApplied) {
-         req.flash("error", "You have already applied for this job.");
-         return res.redirect("/joblist");
-       }
-   
-       let resumeUpload = null;
-       if (req.files && req.files.resume) {
-         const file = req.files.resume;
-   
-         // ✅ Proper resume upload
-         resumeUpload = await cloudinary.uploader.upload(file.tempFilePath, {
-           folder: "resumes",
-           resource_type: "raw"
-         });
-         
-
-   
-         fs.unlinkSync(file.tempFilePath); // delete temp file
-   
-        //  console.log("Uploaded Resume:", resumeUpload); // ✅ This should print proper object
-       }
-   
-       const newApplication = new JobApplicationModel({
-         userId: req.user.id,
-         jobId: jobId,
-         resume: {
-           public_id: resumeUpload.public_id,
-           url: resumeUpload.secure_url
-         },
-         coverLetter: req.body.coverLetter,
-         appliedAt: new Date()
-       });
-   
-       await newApplication.save();
-   
-       req.flash("success", "You have successfully applied for the job.");
-       res.redirect("/jobdetails/" + jobId);
-   
-     } catch (err) {
-       console.log("Upload Error:", err);
-       req.flash("error", "Something went wrong while applying.");
-       res.redirect("/joblist");
-     }
-   };
-   
-  
-
-   static myApplications = async (req, res) => {
+  static applyJob = async (req, res) => {
     try {
-      const applications = await JobApplicationModel.find({ userId: req.user.id })
-        .populate({
-          path: 'jobId',
-          populate: {
-            path: 'createdBy',
-            model: 'user'
-          }
-        })
-        .sort({ appliedAt: -1 });
-        // console.log(applications)
+      const jobId = req.params.id;
   
-      res.render("admin/job/myApplications", {
-        applications,
-        user: req.user
+      const alreadyApplied = await JobApplicationModel.findOne({
+        userId: req.user.id,
+        jobId: jobId,
       });
   
+      if (alreadyApplied) {
+        req.flash("error", "You have already applied for this job.");
+        return res.redirect("/joblist");
+      }
+  
+      let resumeUpload = null;
+      if (req.files && req.files.resume) {
+        const file = req.files.resume;
+  
+        resumeUpload = await cloudinary.uploader.upload(file.tempFilePath, {
+          folder: "resumes",
+          resource_type: "raw",
+        });
+  
+        fs.unlinkSync(file.tempFilePath);
+      }
+  
+      const newApplication = new JobApplicationModel({
+        userId: req.user.id,
+        jobId: jobId,
+        resume: {
+          public_id: resumeUpload.public_id,
+          url: resumeUpload.secure_url,
+        },
+        coverLetter: req.body.coverLetter,
+        appliedAt: new Date(),
+      });
+  
+      await newApplication.save();
+  
+      // ✅ Send Email to Job Seeker
+      const job = await JobModel.findById(jobId);
+      const user = await UserModel.findById(req.user.id);
+  
+      const emailContent = `
+        <h2>Hello ${user.name},</h2>
+        <p>Thank you for applying to the position of <strong>${job.title}</strong> at ${job.location}.</p>
+        <p>We have received your application and will get back to you soon.</p>
+        <br>
+        <p><strong>Job Summary:</strong></p>
+        <ul>
+          <li><strong>Title:</strong> ${job.title}</li>
+          <li><strong>Category:</strong> ${job.category}</li>
+          <li><strong>Location:</strong> ${job.location}</li>
+          <li><strong>Deadline:</strong> ${new Date(job.deadline).toLocaleDateString()}</li>
+        </ul>
+        <br>
+        <p>Best regards,<br>WorkInn Team</p>
+      `;
+  
+      await sendEmail(user.email, "Job Application Confirmation", emailContent);
+  
+      req.flash("success", "You have successfully applied for the job.");
+      res.redirect("/jobdetails/" + jobId);
+    } catch (err) {
+      console.log("Upload Error:", err);
+      req.flash("error", "Something went wrong while applying.");
+      res.redirect("/joblist");
+    }
+  };
+
+  static myApplications = async (req, res) => {
+    try {
+      const applications = await JobApplicationModel.find({
+        userId: req.user.id,
+      })
+        .populate({
+          path: "jobId",
+          populate: {
+            path: "createdBy",
+            model: "user",
+          },
+        })
+        .sort({ appliedAt: -1 });
+      // console.log(applications)
+
+      res.render("admin/job/myApplications", {
+        applications,
+        user: req.user,
+      });
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   static viewAllApplications = async (req, res) => {
     try {
       // Sare job applications fetch karenge, job aur user details ke saath
       const applications = await JobApplicationModel.find()
-        .populate('jobId', 'title companyName')  // sirf job ka title aur companyName lenge
-        .populate('userId', 'name email');       // user ka naam aur email bhi lenge
-  
-      res.render('admin/job/applications', { applications,success:req.flash('success') });
+        .populate("jobId") // sirf job ka title aur companyName lenge
+        .populate("userId", "name email"); // user ka naam aur email bhi lenge
+        console.log(applications)
+
+      res.render("admin/job/applications", {
+        applications,
+        success: req.flash("success"),
+      });
     } catch (err) {
       console.error(err);
       res.status(500).send("Server error");
     }
   };
 
-
   // Example: PUT /admin/application/:id/status
-static updateApplicationStatus = async (req, res) => {
-  try {
-    const appId = req.params.id;
-    const newStatus = req.body.status; // Expected: Pending, Reviewed, Interview, Rejected
+  static updateApplicationStatus = async (req, res) => {
+    try {
+      const appId = req.params.id;
+      const newStatus = req.body.status;
 
-    if (!['Pending', 'Reviewed', 'Interview', 'Rejected'].includes(newStatus)) {
-      return res.status(400).send('Invalid status');
+      if (
+        !["Pending", "Reviewed", "Interview", "Rejected"].includes(newStatus)
+      ) {
+        return res.status(400).send("Invalid status");
+      }
+
+      const application = await JobApplicationModel.findByIdAndUpdate(
+        appId,
+        { status: newStatus },
+        { new: true }
+      ).populate("userId");
+
+      if (!application) {
+        return res.status(404).send("Application not found");
+      }
+
+      // Send email notification to jobseeker
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_ID,
+          pass: process.env.MAIL_PASS,
+        },
+      });
+      // console.log('EMAIL_USER:', process.env.MAIL_ID);
+      // console.log('EMAIL_PASS:', process.env.MAIL_PASS ? 'Exists' : 'Missing');
+
+      const mailOptions = {
+        from: '"PNINFOSYS Worklnn" <your_email@gmail.com>',
+        to: application.userId.email,
+        subject: "Application Status Updated",
+        html: `
+          <h3>Hello ${application.userId.name},</h3>
+          <p>Your application status has been updated to: <b>${newStatus}</b>.</p>
+          <br><p>Regards, <br>PNINFOSYS</p>
+        `,
+      };
+
+      // Email sending is non-blocking, error shouldn't affect response
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email send error:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+
+      req.flash("success", "Application status updated and email sent.");
+      return res.redirect("/recruiter/applicants"); // ✅ Only response sent
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send("Server error"); // ✅ Only one response path
     }
-
-    await JobApplicationModel.findByIdAndUpdate(appId, { status: newStatus });
-    req.flash('success', 'Application status updated successfully.');
-    res.redirect('/recruiter/applicants');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-}
-
-  
-
-  
-
-
+  };
 }
 module.exports = JobController;

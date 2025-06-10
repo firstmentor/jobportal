@@ -38,6 +38,13 @@ route.get("/admin/reject/:id", checkAuth,AdminController.rejectRecruiter);
 route.get('/admin/export-users',checkAuth, AdminController.exportUsers);
 route.get('/admin/users',checkAuth, AdminController.manageUsers);
 route.get('/admin/delete-user/:id', AdminController.deleteUser);
+//change password
+route.get('/changePassword',checkAuth, AdminController.changePassword);
+route.post('/change-password', checkAuth, AdminController.postChangePassword);
+
+
+
+
 
 
 

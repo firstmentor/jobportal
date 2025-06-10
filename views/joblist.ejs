@@ -73,11 +73,17 @@
                     <a class="btn btn-light btn-square me-3" href=""
                       ><i class="far fa-heart text-primary"></i
                     ></a>
-                    <a class="btn btn-primary" href="">Apply Now</a>
+                    <a
+                    href="/jobdetails/<%= item._id %>"
+                    class="btn btn-primary"
+                    href=""
+                    >Job Details</a
+                  >
                   </div>
                   <small class="text-truncate"
                     ><i class="far fa-calendar-alt text-primary me-2"></i>Date
-                    Line: <%= item.createdAt %></small
+                    Line: Date Line: <%= new
+                    Date(item.createdAt).toLocaleDateString("en-IN") %></small
                   >
                 </div>
               </div>
