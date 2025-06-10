@@ -117,7 +117,7 @@ class AdminController {
   
       // Create token after successful login
       const token = jwt.sign(
-        { id: user._id, name: user.name, role: user.role },
+        { id: user._id, name: user.name, role: user.role ,companyName:user.companyName },
         process.env.Secret_key
       );
       res.cookie("token", token);

@@ -15,8 +15,9 @@ cloudinary.config({
 class JobController {
   static display = async (req, res) => {
     try {
-      const job = await JobModel.find({ createdBy: req.user._id }).sort({ createdAt: -1 }); 
+      const job = await JobModel.find({ createdBy: req.user.id }).populate('createdBy').sort({ createdAt: -1 }); 
       const category = await CategoryModel.find().sort({ createdAt: -1 });
+      // console.log(job)
   
       res.render("admin/job/display", {
         name: req.user.name,
@@ -61,7 +62,7 @@ class JobController {
           public_id: imageUpload.public_id,
           url: imageUpload.secure_url,
         },
-        createdBy: req.user._id // ✅ recruiter _id save
+        createdBy: req.user.id // ✅ recruiter _id save
       });
   
       req.flash("success", "Job inserted successfully");
@@ -75,7 +76,8 @@ class JobController {
     try {
       // console.log(req.params.id)
       const id = req.params.id;
-      const job = await JobModel.findById(id); //data fetch mognobd
+      const job = await JobModel.findById(id).populate('createdBy'); //data fetch mognobd
+    
       //   console.log(category);
       res.render("admin/job/view", {
         name: req.user.name,
@@ -89,7 +91,7 @@ class JobController {
     try {
       // console.log(req.params.id);
       const id = req.params.id;
-      const job = await JobModel.findById(id);
+      const job = await JobModel.findById(id).populate('createdBy');;
       // console.log(job);
       res.render("admin/job/edit", {
         name: req.user.name,
@@ -107,7 +109,7 @@ class JobController {
       const {
         title,
         description,
-        companyName,
+        
         location,
         jobType,
         salaryRange,
@@ -142,7 +144,7 @@ class JobController {
       await JobModel.findByIdAndUpdate(id, {
         title,
         description,
-        companyName,
+      
         location,
         jobType,
         salaryRange,
@@ -243,24 +245,29 @@ class JobController {
    
   
 
-  static myApplications = async (req, res) => {
+   static myApplications = async (req, res) => {
     try {
-      // Logged-in user ka id lein
-      const userId = req.user.id;
+      const applications = await JobApplicationModel.find({ userId: req.user.id })
+        .populate({
+          path: 'jobId',
+          populate: {
+            path: 'createdBy',
+            model: 'user'
+          }
+        })
+        .sort({ appliedAt: -1 });
+        // console.log(applications)
   
-      // User ke sab applications lein, job details ke saath populate karke
-      const applications = await JobApplicationModel.find({ userId: userId })
-        .populate('jobId')  // job ke details populate karne ke liye
-        .sort({ appliedAt: -1 });  // latest pehle dikhaye
-  
-      // Applications ko EJS template ko bhejein
-      res.render("admin/job/myApplications", { applications, user: req.user });
+      res.render("admin/job/myApplications", {
+        applications,
+        user: req.user
+      });
   
     } catch (error) {
       console.error(error);
-     
     }
   };
+  
 
   static viewAllApplications = async (req, res) => {
     try {
@@ -289,7 +296,7 @@ static updateApplicationStatus = async (req, res) => {
 
     await JobApplicationModel.findByIdAndUpdate(appId, { status: newStatus });
     req.flash('success', 'Application status updated successfully.');
-    res.redirect('/admin/applications');
+    res.redirect('/recruiter/applicants');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');

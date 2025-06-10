@@ -66,7 +66,7 @@ class FrontController {
 static jobDetails = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await JobModel.findById(jobId);
+    const job = await JobModel.findById(jobId).populate('createdBy');
     
     let alreadyApplied = false;
 

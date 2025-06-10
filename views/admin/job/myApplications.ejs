@@ -46,16 +46,14 @@
                 <% applications.forEach(app => { %>
                   <tr>
                     <td><%= app.jobId ? app.jobId.title : "Job Deleted" %></td>
-                    <td><%= app.jobId ? app.jobId.companyName : "N/A" %></td>
+                    <td><%= app.jobId?.createdBy?.companyName || 'N/A' %></td>
                     <td><%= new Date(app.appliedAt).toLocaleDateString() %></td>
                     <td><%= app.coverLetter || "N/A" %></td>
                     <td><%= app.status %></td>
                     <td>
                       <% if(app.resume && app.resume.url) { %>
                         <!-- Google Docs Preview -->
-                        <a href="https://docs.google.com/gview?url=<%= app.resume.url %>&embedded=true" 
-                           target="_blank" 
-                           class="btn btn-sm btn-info mb-1">Preview</a><br>
+                        
                         <!-- Direct Download -->
                         <a href="<%= app.resume.url %>" 
                            download 

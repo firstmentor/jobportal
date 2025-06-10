@@ -51,6 +51,7 @@
                 <th>Company Name</th>
                 <th>Location</th>
                 <th>Job Type</th>
+                <th>Status</th>
                 <th>Image</th>
                 <th>Action</th>
               </tr>
@@ -60,9 +61,10 @@
                 <tr>
                   <td><%= index + 1 %></td>
                   <td><%= item.title %></td>
-                  <td><%= item.company %></td> <!-- Fix here -->
+                  <td><%= item.createdBy.companyName %></td> <!-- Fix here -->
                   <td><%= item.location %></td>
                   <td><%= item.jobType %></td>
+                  <td><%= item.status %></td>
                   <td><img src="<%= item.image.url %>" alt="Job Image" width="100"></td>
                   <td>
                     <a href="/viewJob/<%= item._id %>" class="btn btn-info">View</a>
