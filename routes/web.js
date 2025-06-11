@@ -40,9 +40,7 @@ route.get('/admin/users',checkAuth, AdminController.manageUsers);
 route.get('/admin/delete-user/:id', AdminController.deleteUser);
 //change password
 route.get('/changePassword',checkAuth, AdminController.changePassword);
-route.post('/change-password', checkAuth, AdminController.postChangePassword);
-
-
+route.post('/change-password', checkAuth, AdminController.postChangePassword)
 
 
 

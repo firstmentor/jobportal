@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['jobseeker', 'recruiter', 'admin'], default: 'jobseeker' },
   status: { type: String, enum: ["pending", "approved"], default: "approved" },
   companyName: { type: String }, // ✅ Comma added after this line
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  resetToken: String,
+  resetTokenExpiry: Date,
 });
 
 module.exports = mongoose.model('user', userSchema);
